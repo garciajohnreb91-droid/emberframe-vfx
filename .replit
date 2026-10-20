@@ -1,0 +1,7 @@
+run = "corepack pnpm dev"
+entrypoint = "src/app/page.tsx"
+modules = ["nodejs-22"]
+
+[[ports]]
+localPort = 3000
+externalPort = 80
