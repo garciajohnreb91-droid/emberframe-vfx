@@ -16,9 +16,9 @@ Import footage → choose/describe effect → add references and mode → positi
 
 ## Roadmap
 
-- Foundation (current): app shell, documentation, domain contracts, developer workflow.
-- Showcase: cinematic landing experience, themed element pages, sample library, labeled editor demo.
-- Editor prototype: project state, layer controls, timeline, visibly mocked provider adapter.
+- Foundation (complete): app shell, documentation, domain contracts, developer workflow.
+- Showcase (implemented): cinematic landing experience, themed element worlds, sample library, labeled interactive editor demo.
+- Editor prototype (implemented): session-local project state, layer controls, timeline, sample comparisons, local video preview, and visibly simulated refinement. No provider adapter is connected.
 - Production: authentication, private storage, async generation, provider evaluation, cost controls, export pipeline.
 
 ## Quality bar

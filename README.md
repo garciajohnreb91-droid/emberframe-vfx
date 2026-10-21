@@ -2,7 +2,9 @@
 
 Premium AI visual effects for artists, directors, and video creators. Keep original footage intact; build FX as editable layers with reference guidance, frame timing, and dissipation control.
 
-**Status:** foundation scaffold. A dark starter page is implemented. Generation, uploads, editing, authentication, storage, and export are future work.
+**Status:** cinematic front-end prototype. Includes a complete landing experience, interactive sample editor, searchable effect library, local video preview, and downloadable demo settings. AI generation, tracking, accounts, cloud storage, and production video rendering are future work.
+
+See [the prototype guide](docs/prototype.md) for component structure, working interactions, and mock boundaries.
 
 ## Quick start
 
@@ -23,7 +25,7 @@ Open http://localhost:3000. Run pnpm lint, pnpm typecheck, and pnpm build to ver
 - [Development and Replit import](docs/development.md)
 - [Codex instructions](AGENTS.md)
 
-Next.js App Router + TypeScript + Tailwind CSS + React. Commit pnpm-lock.yaml. No credentials required. Keep footage, generated assets, and secrets outside Git.
+Next.js App Router + TypeScript + Tailwind CSS + React. Commit pnpm-lock.yaml. No credentials required. Keep user footage, production renders, and secrets outside Git. The small public concept assets in `public/media/` are intentionally bundled with this prototype.
 
 ## Source of truth
 
