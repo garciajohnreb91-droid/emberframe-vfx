@@ -1,9 +1,12 @@
 import type { NextConfig } from "next";
 
+const staticExport = process.env.EMBERFRAME_STATIC_EXPORT === "1";
+
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  output: staticExport ? "export" : undefined,
+  distDir: staticExport ? "out" : ".next",
+  cacheComponents: !staticExport,
+  partialPrefetching: !staticExport,
   turbopack: {
     rules: {
       "*.css": {
