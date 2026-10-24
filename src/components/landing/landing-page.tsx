@@ -36,6 +36,7 @@ import {
   Pause,
   Play,
   Search,
+  Snowflake,
   ShieldCheck,
   SlidersHorizontal,
   Sparkles,
@@ -45,6 +46,7 @@ import {
   Zap,
 } from "lucide-react";
 import { Ambient } from "./ambient";
+import { MaterialLab } from "./material-lab";
 import { EffectArt, effects, categories, type Effect } from "./effects";
 import { Studio } from "./studio";
 import { Brand, Button, Eyebrow, Modal, Reveal } from "./ui";
@@ -556,7 +558,7 @@ function Library({ onSelect }: { onSelect: (effect: Effect) => void }) {
               Explore, reference, and make it your own.
             </p>
             <span className="small-note">
-              CURATED CONCEPT ASSETS / 15 CATEGORIES
+              CURATED CONCEPT ASSETS / {categories.length - 1} CATEGORIES
             </span>
           </div>
         </Reveal>
@@ -645,7 +647,9 @@ function Library({ onSelect }: { onSelect: (effect: Effect) => void }) {
             className="library-expand"
             onClick={() => setExpanded(!expanded)}
           >
-            {expanded ? "Show curated selection" : "Explore all 15 effects"}
+            {expanded
+              ? "Show curated selection"
+              : `Explore all ${effects.length} effects`}
             <ChevronDown size={15} className={expanded ? "rotated" : ""} />
           </button>
         )}
@@ -656,8 +660,18 @@ function Library({ onSelect }: { onSelect: (effect: Effect) => void }) {
 
 function Elements({ onSelect }: { onSelect: (effect: Effect) => void }) {
   const [active, setActive] = useState(0);
-  const effect = effects[active];
-  const icons = [Flame, CloudFog, Zap, Sparkles, Droplets, Focus, Layers3];
+  const families = [...effects.slice(0, 7), effects[effects.length - 1]];
+  const effect = families[active];
+  const icons = [
+    Flame,
+    CloudFog,
+    Zap,
+    Sparkles,
+    Droplets,
+    Focus,
+    Layers3,
+    Snowflake,
+  ];
   return (
     <section className="section elements-section" id="elements">
       <div className="container">
@@ -671,7 +685,7 @@ function Elements({ onSelect }: { onSelect: (effect: Effect) => void }) {
           role="tablist"
           aria-label="Effect families"
         >
-          {effects.slice(0, 7).map((e, i) => {
+          {families.map((e, i) => {
             const Icon = icons[i];
             return (
               <button
@@ -685,13 +699,13 @@ function Elements({ onSelect }: { onSelect: (effect: Effect) => void }) {
                 onKeyDown={(event) => {
                   const next =
                     event.key === "ArrowRight"
-                      ? (i + 1) % 7
+                      ? (i + 1) % families.length
                       : event.key === "ArrowLeft"
-                        ? (i + 6) % 7
+                        ? (i + families.length - 1) % families.length
                         : event.key === "Home"
                           ? 0
                           : event.key === "End"
-                            ? 6
+                            ? families.length - 1
                             : -1;
                   if (next === -1) return;
                   event.preventDefault();
@@ -980,6 +994,7 @@ export function LandingPage() {
             </div>
           </section>
           <ArtistControl />
+          <MaterialLab onSelect={setSelectedEffect} />
           <Library onSelect={setSelectedEffect} />
           <Elements onSelect={setSelectedEffect} />
           <section className="section tools-section" id="tools">

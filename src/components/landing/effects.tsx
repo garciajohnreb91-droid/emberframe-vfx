@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 export const categories = [
   "All effects",
   "Fire",
+  "Frost",
   "Smoke",
   "Dust",
   "Explosions",
@@ -165,6 +166,16 @@ export const effects = [
       "Create depth with adjustable fog and softly layered atmospheric light.",
     tags: ["Fog depth", "Scattering", "Horizon blend"],
   },
+  {
+    name: "Absolute zero",
+    category: "Frost",
+    type: "frost",
+    color: "#9cdeff",
+    description: "Cold, with extraordinary detail.",
+    detail:
+      "Guide crystalline growth across a surface, build the frost, and let a soft frozen mist settle around your scene.",
+    tags: ["Crystal growth", "Surface frost", "Frozen mist"],
+  },
 ];
 export type Effect = (typeof effects)[number];
 export function EffectArt({
@@ -200,6 +211,19 @@ export function EffectArt({
     >
       <div className="effect-image" />
       <div className="effect-halo" />
+      {type === "frost" && (
+        <svg className="frost-crystal" viewBox="0 0 240 240" fill="none">
+          {Array.from({ length: 6 }, (_, i) => (
+            <g key={i} transform={`rotate(${i * 60} 120 120)`}>
+              <path d="M120 120V24M120 45L106 32M120 45L134 32M120 65L95 42M120 65L145 42M120 87L84 55M120 87L156 55M120 107L90 80M120 107L150 80" />
+              <path
+                className="frost-shard"
+                d="M120 25L125 85L120 120L115 85Z"
+              />
+            </g>
+          ))}
+        </svg>
+      )}
       {Array.from({ length: 8 }, (_, i) => (
         <i key={i} style={{ "--i": i } as CSSProperties} />
       ))}

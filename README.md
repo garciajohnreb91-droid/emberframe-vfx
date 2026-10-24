@@ -6,6 +6,8 @@ Premium AI visual effects for artists, directors, and video creators. Keep origi
 
 See [the prototype guide](docs/prototype.md) for component structure, working interactions, and mock boundaries.
 
+For a shareable deployment, follow the [Vercel setup guide](docs/vercel.md). The checked-in Vercel configuration uses the pinned pnpm version and the native Next.js build.
+
 ## Quick start
 
 Requires Node 22 and pnpm 11.25.0. Enable Corepack and activate the pinned packageManager version, or install that pnpm version through your Node package manager.

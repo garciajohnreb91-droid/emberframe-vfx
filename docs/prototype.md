@@ -8,7 +8,8 @@ The landing experience lives in `src/components/landing/`. It uses Next.js App R
 - Interactive editor: select/toggle independent layers; edit opacity, blending, start/peak/end frames, and dissipation; play and scrub a 240-frame sample timeline.
 - Before/after comparison slider, reference guidance selection, sample library, and simulated refinement.
 - Browser-local video import with type/size validation and object-URL cleanup. Original files are never modified or uploaded.
-- Fifteen searchable/filterable concept effects, seven element worlds, and scene showcases.
+- Sixteen searchable/filterable concept effects, eight element worlds including Frost, and scene showcases.
+- Six interactive material studies: burning seams and embers, crystal growth, shockwaves and fragments, electric arcs, astral orbits, and liquid ripples. Hover, focus, or tap to trigger a transformation; a pause control and reduced-motion mode provide still studies.
 - Download actual JSON project settings or a transparent illustrative SVG sample.
 - Responsive desktop/tablet/mobile layouts; keyboard-operated element tabs; modal focus trapping, Escape dismissal, and focus restoration.
 
@@ -27,6 +28,8 @@ A refresh resets the editing session. JSON downloads preserve the chosen demo se
 - `effects.tsx`: typed mock asset catalog and shared sprite artwork.
 - `ui.tsx`: reusable brand, button, reveal, eyebrow, and accessible modal components.
 - `ambient.tsx`: bounded, pointer-only cursor particles, with reduced-motion handling.
+- `material-lab.tsx` and `material-canvas.tsx`: interactive material cards and procedural canvas effects. Canvases run at up to 30 fps with a 1.5 pixel-ratio cap, stop outside the viewport or in a hidden tab, and do not update React state per frame.
+- `src/app/material-lab.css`: material surfaces, transformations, and responsive card layouts.
 - `src/app/globals.css`: design tokens, Tailwind integration, component styles, and responsive breakpoints.
 - `public/media/`: optimized public concept artwork and the silent hero motion study. These are product demo assets, never user footage.
 
@@ -35,3 +38,5 @@ A refresh resets the editing session. JSON downloads preserve the chosen demo se
 `pnpm build:static` produces a standalone `out/` bundle for the private Sites preview. The normal `pnpm build` / `pnpm start` workflow remains available for Node hosting. The Sites manifest in `.openai/hosting.json` identifies the private preview and its static output directory.
 
 Run `pnpm lint`, `pnpm typecheck`, and `pnpm build`. The browser review covers desktop and mobile layouts, effect filters, layer visibility, timing constraints, comparison, reference controls, download content, local video import, modal focus, and reduced motion.
+
+See [Vercel deployment](vercel.md) to connect the GitHub source to a shareable production deployment.
