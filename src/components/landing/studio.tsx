@@ -37,6 +37,7 @@ import { EffectArt, effects, type Effect } from "./effects";
 import { Modal } from "./ui";
 
 const sampleClips = [
+  { name: "Human × AI", url: "/media/samples/human-ai.mp4", poster: "/media/samples/human-ai.webp" },
   { name: "The Darkening Vigil", url: "/media/samples/darkening-vigil.mp4", poster: "/media/samples/darkening-vigil.webp" },
   { name: "Time traveler", url: "/media/samples/time-traveler.mp4", poster: "/media/samples/time-traveler.webp" },
 ];
@@ -131,7 +132,7 @@ export function Studio({ initialEffect }: { initialEffect?: Effect }) {
     [exported, setExported] = useState(false),
     [notice, setNotice] = useState("");
   const [video, setVideo] = useState<{ url: string; name: string; poster?: string } | null>(
-      initialEffect ? null : sampleClips[0],
+      initialEffect ? null : sampleClips[1],
     ),
     [fileError, setFileError] = useState("");
   const [demoOverlays, setDemoOverlays] = useState(!!initialEffect);
@@ -183,13 +184,13 @@ export function Studio({ initialEffect }: { initialEffect?: Effect }) {
     setNotice(`${effect.name} added as an independent layer`);
   }
   function scrub(value: number) {
-    setFrame(value);
+    const el = videoRef.current;
+    const target = el && Number.isFinite(el.duration)
+      ? Math.min(value, Math.max(0, Math.floor(el.duration * 24) - 1))
+      : value;
+    setFrame(target);
     setPlaying(false);
-    if (videoRef.current && Number.isFinite(videoRef.current.duration))
-      videoRef.current.currentTime = Math.min(
-        value / 24,
-        videoRef.current.duration,
-      );
+    if (el && Number.isFinite(el.duration)) el.currentTime = target / 24;
   }
   function upload(file?: File) {
     if (!file) return;
@@ -468,7 +469,7 @@ export function Studio({ initialEffect }: { initialEffect?: Effect }) {
               {compare ? "SOURCE FOOTAGE" : demoOverlays ? "DEMO COMPOSITE" : "SOURCE FOOTAGE"}
             </span>
             <span className="scene-label right">
-              {compare ? "DEMO OVERLAYS" : video ? "10-SECOND PREVIEW" : "SAMPLE SCENE"}
+              {compare ? "DEMO OVERLAYS" : video ? "UP TO 10-SECOND PREVIEW" : "SAMPLE SCENE"}
             </span>
             {compare && (
               <>

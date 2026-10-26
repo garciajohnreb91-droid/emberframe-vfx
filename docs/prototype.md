@@ -44,3 +44,5 @@ See [Vercel deployment](vercel.md) to connect the GitHub source to a shareable p
 ## Supplied sample footage
 
 The studio opens with The Darkening Vigil and includes Time traveler. These user-supplied precomposited clips are bundled as silent 720×1280, 24 fps, 10-second mockups. Original uploads remain unchanged. Existing effects and captions are baked in; optional demo overlays do not isolate or regenerate them. Portrait footage is shown without cropping. Video playback uses the media clock. The Crossing plate remains selectable.
+
+The Human × AI sample retains its six-second landscape duration. Seeking past the end of a short clip clamps to its last available frame within the ten-second demo workspace.
