@@ -40,3 +40,7 @@ A refresh resets the editing session. JSON downloads preserve the chosen demo se
 Run `pnpm lint`, `pnpm typecheck`, and `pnpm build`. The browser review covers desktop and mobile layouts, effect filters, layer visibility, timing constraints, comparison, reference controls, download content, local video import, modal focus, and reduced motion.
 
 See [Vercel deployment](vercel.md) to connect the GitHub source to a shareable production deployment.
+
+## Supplied sample footage
+
+The studio opens with The Darkening Vigil and includes Time traveler. These user-supplied precomposited clips are bundled as silent 720×1280, 24 fps, 10-second mockups. Original uploads remain unchanged. Existing effects and captions are baked in; optional demo overlays do not isolate or regenerate them. Portrait footage is shown without cropping. Video playback uses the media clock. The Crossing plate remains selectable.

@@ -36,6 +36,11 @@ import {
 import { EffectArt, effects, type Effect } from "./effects";
 import { Modal } from "./ui";
 
+const sampleClips = [
+  { name: "The Darkening Vigil", url: "/media/samples/darkening-vigil.mp4", poster: "/media/samples/darkening-vigil.webp" },
+  { name: "Time traveler", url: "/media/samples/time-traveler.mp4", poster: "/media/samples/time-traveler.webp" },
+];
+
 type Layer = {
   id: string;
   name: string;
@@ -113,7 +118,7 @@ export function Studio({ initialEffect }: { initialEffect?: Effect }) {
     initialEffect ? [...defaults, newLayer(initialEffect, "added")] : defaults,
   );
   const [selected, setSelected] = useState(initialEffect ? "added" : "portal");
-  const [frame, setFrame] = useState(96),
+  const [frame, setFrame] = useState(initialEffect ? 96 : 0),
     [playing, setPlaying] = useState(false),
     [compare, setCompare] = useState(false),
     [split, setSplit] = useState(48);
@@ -125,10 +130,12 @@ export function Studio({ initialEffect }: { initialEffect?: Effect }) {
   const [format, setFormat] = useState("project"),
     [exported, setExported] = useState(false),
     [notice, setNotice] = useState("");
-  const [video, setVideo] = useState<{ url: string; name: string } | null>(
-      null,
+  const [video, setVideo] = useState<{ url: string; name: string; poster?: string } | null>(
+      initialEffect ? null : sampleClips[0],
     ),
     [fileError, setFileError] = useState("");
+  const [demoOverlays, setDemoOverlays] = useState(!!initialEffect);
+  const [videoSize, setVideoSize] = useState("720 × 1280");
   const nextLayerId = useRef(0);
   const videoRef = useRef<HTMLVideoElement>(null),
     fileRef = useRef<HTMLInputElement>(null),
@@ -138,10 +145,10 @@ export function Studio({ initialEffect }: { initialEffect?: Effect }) {
     closeUpload = useCallback(() => setUploadOpen(false), []),
     closeHelp = useCallback(() => setHelpOpen(false), []);
   useEffect(() => {
-    if (!playing) return;
+    if (!playing || video) return;
     const timer = setInterval(() => setFrame((f) => (f + 1) % 240), 1000 / 24);
     return () => clearInterval(timer);
-  }, [playing]);
+  }, [playing, video]);
   useEffect(() => {
     if (!notice) return;
     const timer = setTimeout(() => setNotice(""), 4000);
@@ -149,7 +156,7 @@ export function Studio({ initialEffect }: { initialEffect?: Effect }) {
   }, [notice]);
   useEffect(() => {
     if (!video) return;
-    return () => URL.revokeObjectURL(video.url);
+    return () => { if (video.url.startsWith("blob:")) URL.revokeObjectURL(video.url); };
   }, [video]);
   useEffect(() => {
     const el = videoRef.current;
@@ -169,6 +176,7 @@ export function Studio({ initialEffect }: { initialEffect?: Effect }) {
   }
   function addEffect(effect: Effect) {
     const id = `fx-${++nextLayerId.current}`;
+    setDemoOverlays(true);
     setLayers((all) => [...all, newLayer(effect, id)]);
     setSelected(id);
     setTab("Layers");
@@ -258,6 +266,13 @@ export function Studio({ initialEffect }: { initialEffect?: Effect }) {
           </button>
         </div>
       </div>
+      <div className="studio-samples" role="group" aria-label="Sample footage">
+        <span><Film size={13} /> SAMPLE FOOTAGE</span>
+        {sampleClips.map((clip) => <button key={clip.url} aria-pressed={video?.url === clip.url} onClick={() => { setVideo(clip); setFrame(0); setPlaying(false); setFileError(""); setDemoOverlays(false); setCompare(false); }}>{clip.name}</button>)}
+        <button aria-pressed={!video} onClick={() => { setVideo(null); setPlaying(false); setFrame(96); setDemoOverlays(true); setFileError(""); }}>The crossing</button>
+        <label><input type="checkbox" checked={demoOverlays} onChange={(e) => setDemoOverlays(e.target.checked)} /> Demo overlays</label>
+      </div>
+      <p className="studio-source-note">Sample clips include existing effects and captions. Demo overlays are illustrative additions, not AI-generated edits. Video previews are silent, up to 10 seconds.</p>
       <div className="studio-workspace">
         <aside className="studio-sidebar">
           <div className="studio-tabs">
@@ -360,7 +375,7 @@ export function Studio({ initialEffect }: { initialEffect?: Effect }) {
               {video ? video.name : "The crossing / shot_004"}
             </span>
             <div>
-              <span className="resolution">1920 × 1080</span>
+              <span className="resolution">{video ? videoSize : "1920 × 1080"}</span>
               <button
                 className="icon-button"
                 aria-label="Expand editor"
@@ -379,11 +394,16 @@ export function Studio({ initialEffect }: { initialEffect?: Effect }) {
               </button>
             </div>
           </div>
-          <div className="viewer-scene">
+          <div className={`viewer-scene ${video ? "has-video" : ""}`}>
             {video ? (
               <video
                 ref={videoRef}
+                key={video.url}
                 src={video.url}
+                poster={video.poster}
+                preload="metadata"
+                onLoadedMetadata={(e) => { const el = e.currentTarget; setVideoSize(`${el.videoWidth} × ${el.videoHeight}`); el.currentTime = Math.min(frame / 24, Math.max(0, el.duration - 1 / 24)); }}
+                onTimeUpdate={(e) => { if (playing) { const el = e.currentTarget; if (el.currentTime >= 10) el.currentTime = 0; setFrame(Math.min(239, Math.floor(el.currentTime * 24))); } }}
                 muted
                 loop
                 playsInline
@@ -404,6 +424,7 @@ export function Studio({ initialEffect }: { initialEffect?: Effect }) {
               className="composite-stack"
               style={{
                 clipPath: compare ? `inset(0 0 0 ${split}%)` : undefined,
+                display: demoOverlays ? undefined : "none",
               }}
             >
               {layers.map(
@@ -444,10 +465,10 @@ export function Studio({ initialEffect }: { initialEffect?: Effect }) {
             <div className="viewer-corner top-left" />
             <div className="viewer-corner bottom-right" />
             <span className="scene-label">
-              {compare ? "ORIGINAL" : "COMPOSITE PREVIEW"}
+              {compare ? "SOURCE FOOTAGE" : demoOverlays ? "DEMO COMPOSITE" : "SOURCE FOOTAGE"}
             </span>
             <span className="scene-label right">
-              {compare ? "WITH EMBERFRAME" : "SAMPLE SCENE"}
+              {compare ? "DEMO OVERLAYS" : video ? "10-SECOND PREVIEW" : "SAMPLE SCENE"}
             </span>
             {compare && (
               <>
